@@ -32,4 +32,4 @@ public class NPCMove : MonoBehaviour
         agent.SetDestination(finishPoint);
         Debug.Log("UPDATE");
     }
-}  
+}
