@@ -11,7 +11,7 @@ TagManager:
   - Wall
   - Gateway
   - LongWall
-  - Swamp
+  - SlowArea
   layers:
   - Default
   - TransparentFX
