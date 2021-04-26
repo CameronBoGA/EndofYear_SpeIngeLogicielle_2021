@@ -10,16 +10,16 @@ public class NavMeshBaker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < navMeshSurfaces.Length; i++)
-        {
-            navMeshSurfaces[i].BuildNavMesh();
-        }
+        
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        for(int i = 0; i < navMeshSurfaces.Length; i++)
+        {
+            navMeshSurfaces[i].BuildNavMesh();
+        }
     }
 }
