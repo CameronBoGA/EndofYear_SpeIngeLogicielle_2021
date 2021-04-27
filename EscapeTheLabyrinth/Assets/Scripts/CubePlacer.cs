@@ -97,33 +97,38 @@ public class CubePlacer : MonoBehaviour
     private void CreateObject(Vector3 clickPoint)
     {
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
+        GameObject newobj;
     
 	    if (itemOption == ItemList.Wall)
 	    {
-            Instantiate(wall, finalPosition, Quaternion.identity);
-            wall.layer = 9;
-            wall.tag = "Wall";
+            newobj = Instantiate(wall, finalPosition, Quaternion.identity);
+            newobj.layer = 9;
+            newobj.tag = "Wall";
+            EditorObject eo = newobj.AddComponent<EditorObject>();
+            eo.data.pos = newobj.transform.position;
+            eo.data.objectType = EditorObject.ObjectType.Wall;
         }
         if (itemOption == ItemList.Player)
 	    {
             if (ms.playerPlaced == false)
 	        {
-                Instantiate(player, finalPosition, Quaternion.identity);
-                player.layer = 9;
-                player.tag = "Player";
+                newobj = Instantiate(player, finalPosition, Quaternion.identity);
+                newobj.layer = 9;
+                newobj.tag = "Player";
                 ms.playerPlaced = true;
-                // Adding Components to player
-                /*player.AddComponent<CapsuleCollider>();
-                player.GetComponent<CapsuleCollider>().center = new Vector3(0, 1, 0);
-                player.GetComponent<CapsuleCollider>().height = 2;*/
+                EditorObject eo = newobj.AddComponent<EditorObject>();
+                eo.data.pos = newobj.transform.position;
+                eo.data.objectType = EditorObject.ObjectType.Player;
             }
         }
     }
-
+}
+/*
     private void PlaceCubeNear(Vector3 clickPoint)
     {
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
         //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;
         Instantiate(wall, finalPosition, Quaternion.identity);
+        
     }
-}
+}*/
