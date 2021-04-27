@@ -12,7 +12,7 @@ public class NPCMove : MonoBehaviour
     {
         
         finishPoint = GameObject.FindGameObjectWithTag("Stop").transform.position;
-        //Debug.Log("AWAKE");
+        Debug.Log("AWAKE");
     }
 
     // Start is called before the first frame update

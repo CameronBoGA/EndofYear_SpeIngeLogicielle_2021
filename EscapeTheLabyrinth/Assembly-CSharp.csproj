@@ -45,7 +45,6 @@
      <Compile Include="Assets\Codes\EventTrigger.cs" />
      <Compile Include="Assets\Scripts\MouseScript.cs" />
      <Compile Include="Assets\Scripts\CameraMove.cs" />
-     <Compile Include="Assets\Codes\Debug.cs" />
     <Reference Include="UnityEngine">
         <HintPath>G:/UnityHub/datas/2020.3.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
