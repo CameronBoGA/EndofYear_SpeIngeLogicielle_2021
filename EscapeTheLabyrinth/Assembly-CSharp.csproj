@@ -39,12 +39,12 @@
      <Compile Include="Assets\Scripts\ManagerScript.cs" />
      <Compile Include="Assets\Scripts\LevelEditor.cs" />
      <Compile Include="Assets\Scripts\EditorObject.cs" />
-     <Compile Include="Assets\Codes\ModifyAgentSpeed.cs" />
      <Compile Include="Assets\Codes\NPCMove.cs" />
      <Compile Include="Assets\Codes\NavMeshBaker.cs" />
      <Compile Include="Assets\Codes\EventTrigger.cs" />
      <Compile Include="Assets\Scripts\MouseScript.cs" />
      <Compile Include="Assets\Scripts\CameraMove.cs" />
+     <Compile Include="Assets\Codes\SlowAreaHandler.cs" />
     <Reference Include="UnityEngine">
         <HintPath>G:/UnityHub/datas/2020.3.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

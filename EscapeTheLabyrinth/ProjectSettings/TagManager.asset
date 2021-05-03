@@ -12,6 +12,7 @@ TagManager:
   - Gateway
   - LongWall
   - SlowArea
+  - Caltrop
   layers:
   - Default
   - TransparentFX

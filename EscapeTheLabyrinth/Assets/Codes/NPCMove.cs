@@ -7,18 +7,19 @@ public class NPCMove : MonoBehaviour
 {
     public NavMeshAgent agent;
     UnityEngine.Vector3 finishPoint;
+    private bool debug = false;
 
     void Awake()
     {
         
         finishPoint = GameObject.FindGameObjectWithTag("Stop").transform.position;
-        Debug.Log("AWAKE");
+        if(debug == true) Debug.Log("AWAKE");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log("START");
+        if(debug == true) Debug.Log("START");
     }
     
 
@@ -26,8 +27,8 @@ public class NPCMove : MonoBehaviour
     void Update()
     {
         
-        //Debug.Log(finishPoint);
+        if(debug == true) Debug.Log(finishPoint);
         agent.SetDestination(finishPoint);
-        //Debug.Log("UPDATE");
+        if(debug == true) Debug.Log("UPDATE");
     }
 }
