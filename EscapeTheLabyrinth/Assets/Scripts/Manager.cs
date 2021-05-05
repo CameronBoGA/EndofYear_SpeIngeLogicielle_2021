@@ -19,21 +19,21 @@ public class Manager : MonoBehaviour
     public Text levelMessage;
     public Animator messageAnim;
     private bool saveLoadPositionIn = false;
-    private LevelEditor level;
+    //private LevelEditor level;
     // Testing
     public CubePlacer user;
 
     void Start()
     {
-        CreateEditor();
+        //CreateEditor();
     }
 
-     LevelEditor CreateEditor()
+    /*LevelEditor CreateEditor()
     {
         level = new LevelEditor();
         level.editorObjects = new List<EditorObject.Data>();
         return level;
-    }
+    }*/
 
     public void ChooseSave()
     {
@@ -55,21 +55,19 @@ public class Manager : MonoBehaviour
         Debug.Log("Inside Choose Load");
         if (saveLoadPositionIn == false)
         {
-            Debug.Log("Pannel is not on screen");
             loadUIAnimation.SetTrigger("SaveLoadIn");
             saveLoadPositionIn = true;
             saveLoadMenuOpen = true;
         }
         else
         {
-            Debug.Log("Pannel is true");
             loadUIAnimation.SetTrigger("SaveLoadOut");
             saveLoadPositionIn = false;
             saveLoadMenuOpen = false;
         }
     }
 
-   public void SaveLevel()
+    /*public void SaveLevel()
     {
         EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
         foreach (EditorObject obj in foundObjects)
@@ -97,9 +95,9 @@ public class Manager : MonoBehaviour
         levelNameSave.DeactivateInputField();
         levelMessage.text = levelFile + " saved to LevelData folder.";
         messageAnim.Play("MessageFade", 0, 0);
-    }
+    }*/
 
-    public void LoadLevel()
+    /*public void LoadLevel()
     {
         string folder = Application.dataPath + "/LevelData/";
         string levelFile = "";
@@ -175,7 +173,7 @@ public class Manager : MonoBehaviour
         
         levelMessage.text = "Level loading...done.";
         messageAnim.Play("MessageFade", 0, 0);
-    }
+    }*/
 
     public void ChooseWall()
     {

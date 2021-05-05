@@ -10,112 +10,198 @@ using System.IO;
 
 public class apiHandler : MonoBehaviour
 {
+    /* URL for maps*/
+    private readonly string baseURL = "http://127.0.0.1:8080/api/maps";
+    
+    /*Row retrieved from Database*/
     private string[] rows;
 
-    private readonly string baseURL = "http://127.0.0.1:8080";
+    /* Level manipulation for Json */
+    private LevelEditor level;
+    public bool playerPlaced = false;
+    public GameObject wall;
+    public GameObject player;
+    private string mapDB;
+
+    /* Misc Animations and UI */
+    public bool saveLoadMenuOpen = false;
+    public Animator saveUIAnimation;
+    public Animator loadUIAnimation;
+    public Text levelMessage;
+    public InputField levelNameSave;
+    public InputField creatorNameSave;
+    public InputField levelNameLoad;
+    private bool saveLoadPositionIn = false;
+    public Animator messageAnim;
 
     private void Start()
     {
-        //maybe
-        //string overAllText.text = "";
-        //StartCoroutine(testingDaMothafucka());
-        StartCoroutine(testingUploadShit());
+        CreateEditor();
     }
 
-    IEnumerator testingDaMothafucka()
+    LevelEditor CreateEditor()
     {
-        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get("http://127.0.0.1:8080/api/maps"))
+        level = new LevelEditor();
+        level.editorObjects = new List<EditorObject.Data>();
+        return level;
+    }
+
+    public void SaveLevel()
+    {
+        /* Init */
+        string creatorName;
+    
+        /*Creating a json with all objects defined in Editor Object*/
+        EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
+        foreach (EditorObject obj in foundObjects)
+            level.editorObjects.Add(obj.data);
+        string json = JsonUtility.ToJson(level);
+        string folder = Application.dataPath + "/LevelData/";
+        string leveltitle = "";
+
+        /* Setting the Name of The map*/
+        if (levelNameSave.text == "")
+            leveltitle = "new_level.json";
+        else
+            leveltitle = levelNameSave.text + ".json";
+        
+        /* Setting the Name of The creator*/
+        if (creatorNameSave.text == "") {
+            creatorName = "Bob";
+            levelMessage.text = "As your name is empty it has been set to Bob";
+        } else
+            creatorName = creatorNameSave.text;
+
+        /* Animation for Panel Handling */
+        saveUIAnimation.SetTrigger("SaveLoadOut");
+        saveLoadPositionIn = false;
+        saveLoadMenuOpen = false;
+        
+        /* Resetting Variables */
+        levelNameSave.text = "";
+        levelNameSave.DeactivateInputField();
+        
+        /* Final Message of interaction and animation handling */
+        messageAnim.Play("MessageFade", 0, 0);
+        StartCoroutine(saveMapOnDB(leveltitle, creatorName, json));
+    }
+
+    IEnumerator saveMapOnDB(string leveltitle, string creatorName, string jsonString)
+    {
+        //string jsonString = File.ReadAllText(Application.dataPath+"/LevelData/Demo.json");
+        
+        /* Adding rows to form which will be sent to DB */
+        WWWForm formdata = new WWWForm();
+        formdata.AddField("title", leveltitle);
+        formdata.AddField("creator", creatorName);
+        formdata.AddField("map_layout", jsonString);
+        formdata.AddField("result", "No attempt as of yet");
+
+        UnityWebRequest www = UnityWebRequest.Post(baseURL, formdata);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            levelMessage.text = "Map upload complete!";
+        }
+    }
+
+    IEnumerator loadMapOnDB(string levelname)
+    {
+
+        /* Must find a specific map on db */
+
+        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get(baseURL))
         {
             yield return mapInfoRequest.SendWebRequest();
             if (mapInfoRequest.result == UnityWebRequest.Result.ConnectionError) // Error
             {
+                levelMessage.text = levelname + " could not be found!";
+                loadUIAnimation.SetTrigger("SaveLoadOut");
+                saveLoadPositionIn = false;
+                saveLoadMenuOpen = false;
+                messageAnim.Play("MessageFade", 0, 0);
+                levelNameLoad.DeactivateInputField();
                 Debug.LogError(mapInfoRequest.error);
                 yield break;
             }
             else // Success
             {
                 Debug.Log("Received: " + mapInfoRequest.downloadHandler.text);
-                string fulldata = mapInfoRequest.downloadHandler.text;
+                mapDB = mapInfoRequest.downloadHandler.text;
+                /*string fulldata = mapInfoRequest.downloadHandler.text;
                 rows = fulldata.Split(new string[] { "<br>" }, StringSplitOptions.None);
                 Debug.Log(String.Format("There are {0} comments.", rows.Length));
                 foreach (string row in rows)
                 {
                     Debug.Log(row);
-                }
+                }*/
             }
         }
     }
-    IEnumerator testingUploadShit()
+    public void LoadLevel()
     {
-        string jsonString = File.ReadAllText(Application.dataPath+"/LevelData/Demo.json");
         
-        WWWForm formdata = new WWWForm();
-        formdata.AddField("title", "Testing the json upload");
-        formdata.AddField("creator", "Cameron");
-        formdata.AddField("map_layout", jsonString);
-        formdata.AddField("result", "succes");
+        /* Retrieving the Level Name */
+        string levelFile = "";
+        if (levelNameLoad.text == "")
+            levelFile = "new_level.json";
+        else
+            levelFile = levelNameLoad.text + ".json";
         
+        /* Calling Function for db management */
+        StartCoroutine(loadMapOnDB(levelFile));
 
-        UnityWebRequest www = UnityWebRequest.Post("http://127.0.0.1:8080/api/maps", formdata);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Debug.Log("Form upload complete!");
-        }
-        //string pokeName = pokeInfo["name"];
+        /* If the level is found, it will proceed down, if not if would have been stoppped in coroutine */
+        EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
+        foreach (EditorObject obj in foundObjects)
+        Destroy(obj.gameObject);
+        playerPlaced = false;
+        
+        /* Fill the map */
+        CreateFromString();
     }
 
-    public void OnButtonRandomPokemon()
+    void CreateFromString()
     {
-        //overAll.text = "Loading...";
-        //StartCoroutine(GetPokemonAtIndex(randomPokeIndex));
-        //StartCoroutine(getMapURL(MapName));
-    }
+        /* Initialisation */
+        GameObject newObj;
 
-    IEnumerator downLoad(string MapName)
-    {
-        // Get MapInfo
-        string mapURL = baseURL + "api/" + MapName;
-        // Example URL: https://http://127.0.0.1:8000/api/TestMap
-
-        UnityWebRequest mapInfoRequest = UnityWebRequest.Get(mapURL);
-
-        yield return mapInfoRequest.SendWebRequest();
-
-        /*if (mapInfoRequest.isNetworkError || mapInfoRequest.isHttpError)
+        for (int i = 0; i < level.editorObjects.Count; i++)
         {
-            Debug.LogError(mapInfoRequest.error);
-            yield break;
-        }
-
-        JSONNode mapInfo = JSON.Parse(mapInfoRequest.downloadHandler.text);*/
+            if (level.editorObjects[i].objectType == EditorObject.ObjectType.Wall)
+                {
+                    newObj = Instantiate(wall, transform.position, Quaternion.identity);
+                    newObj.transform.position = level.editorObjects[i].pos;
+                    newObj.layer = 9;
+                    EditorObject eo = newObj.AddComponent<EditorObject>();
+                    eo.data.pos = newObj.transform.position;
+                    eo.data.objectType = EditorObject.ObjectType.Wall;
+                }
+            else if (level.editorObjects[i].objectType == EditorObject.ObjectType.Player)
+                {
+                    newObj = Instantiate(player, transform.position, Quaternion.identity);
+                    newObj.layer = 9;
+                    newObj.transform.position = level.editorObjects[i].pos;
+                    playerPlaced = true;
+                    EditorObject eo = newObj.AddComponent<EditorObject>();
+                    eo.data.pos = newObj.transform.position;
+                    eo.data.objectType = EditorObject.ObjectType.Player;
+                }
+            }
+        
+        /*Misc Animation and UI Handling*/
+        levelNameLoad.text = "";
+        levelNameLoad.DeactivateInputField();
+        loadUIAnimation.SetTrigger("SaveLoadOut");
+        saveLoadPositionIn = false;
+        saveLoadMenuOpen = false;
+        levelMessage.text = "Level loading...done.";
+        messageAnim.Play("MessageFade", 0, 0);
     }
-
-    IEnumerator upload()
-    {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-
-        formData.Add(new MultipartFormDataSection("field1=foo&field2=bar"));
-        formData.Add(new MultipartFormFileSection("my file data", "myfile.txt"));
-
-        UnityWebRequest www = UnityWebRequest.Post("http://www.my-server.com/myform", formData);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Debug.Log("Form upload complete!");
-        }
-        //string pokeName = pokeInfo["name"];
-    }
-    
 }
 
