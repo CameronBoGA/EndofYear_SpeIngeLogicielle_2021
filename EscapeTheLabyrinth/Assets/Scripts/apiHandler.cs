@@ -6,6 +6,7 @@ using SimpleJSON;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.IO;
 
 public class apiHandler : MonoBehaviour
 {
@@ -46,16 +47,14 @@ public class apiHandler : MonoBehaviour
     }
     IEnumerator testingUploadShit()
     {
-        //List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        string jsonString = File.ReadAllText(Application.dataPath+"/LevelData/Demo.json");
         
         WWWForm formdata = new WWWForm();
-        formdata.AddField("title", "Yolo?");
-        formdata.AddField("creator", "me");
+        formdata.AddField("title", "Testing the json upload");
+        formdata.AddField("creator", "Cameron");
+        formdata.AddField("map_layout", jsonString);
         formdata.AddField("result", "succes");
-
-        /*formData.Add(new MultipartFormDataSection("field1=foo&field2=bar"));
-        formData.Add(new MultipartFormDataSection("field1=foo&field2=foo"));
-        formData.Add(new MultipartFormFileSection("my file data Title", "My Creator in unity"));*/
+        
 
         UnityWebRequest www = UnityWebRequest.Post("http://127.0.0.1:8080/api/maps", formdata);
         yield return www.SendWebRequest();
