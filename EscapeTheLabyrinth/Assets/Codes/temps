@@ -73,3 +73,90 @@ public class IAMove : MonoBehaviour
         }
     }
 }
+
+///////////////////////////// NavMeshBaker (v1) /////////////////////////////
+
+
+//using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class NavMeshBaker : MonoBehaviour
+{
+    [SerializeField] NavMeshSurface[] navMeshSurfaces;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {   
+        for(int i = 0; i < navMeshSurfaces.Length; i++)
+        {
+            navMeshSurfaces[i].BuildNavMesh();
+        }
+    }
+
+    public void navMesh()
+    {
+        
+    }
+}
+
+///////////////////////////// NavMeshBaker (v2) /////////////////////////////
+
+//using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class NavMeshBaker : MonoBehaviour
+{
+    [SerializeField] NavMeshSurface navMeshSurfaces;
+    private bool testPath;
+    private NavMeshPath path;
+    //private NavMeshAgent agent = GetComponent<NPCMove>().getAgent();
+
+    private UnityEngine.Vector3 finishPoint ;//= GetComponent<NPCMove>().getFinishPoint();
+    // Start is called before the first frame update
+    void Start()
+    {
+        navMeshSurfaces.BuildNavMesh();
+        path = new NavMeshPath();
+        //testPath = agent.CalculatePath(finishPoint, path);
+        //}
+        //if(testPath == true) return true;
+        //else return false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {   
+        //finishPoint = GameObject.FindGameObjectWithTag("Stop").transform.position;
+        bool res = NavMeshCalculate(navMeshSurfaces);
+        Debug.Log(res);
+        /*
+        for(int i = 0; i < navMeshSurfaces.Length; i++)
+        {
+            navMeshSurfaces[i].BuildNavMesh();
+        }
+
+        testPath = CalculatePath(finishPoint, NavMeshBaker);*/
+    }
+
+    bool NavMeshCalculate(NavMeshSurface navMeshSurfaces)
+    {
+        //for(int i = 0; i < navMeshSurfaces.Length; i++)
+        //{
+        navMeshSurfaces.BuildNavMesh();
+        return true;
+        
+       
+    }
+}
