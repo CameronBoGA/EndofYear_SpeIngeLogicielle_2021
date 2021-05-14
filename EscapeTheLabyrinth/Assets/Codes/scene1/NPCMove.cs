@@ -9,8 +9,10 @@ using UnityEngine.AI;
 
 public class NPCMove : MonoBehaviour
 {
-    private double speedAgent = 5;
     public UnityEngine.AI.NavMeshAgent agent;
+
+    private double speedAgent = 5;
+    private UnityEngine.Vector3 startPoint;
     private UnityEngine.Vector3 finishPoint;
     private DateTime startTime;
     private bool failedStatus = false;
@@ -32,6 +34,11 @@ public class NPCMove : MonoBehaviour
     {
         agent.speed = (float) speedAgent;
         finishPoint = GameObject.FindGameObjectWithTag("Stop").transform.position;
+
+        // teleportation de l'agent
+        startPoint = GameObject.Find("Start").transform.position;
+        agent.Warp(startPoint);
+        UnityEngine.Debug.Log("Teleport");
     }
     
     // Update is called once per frame

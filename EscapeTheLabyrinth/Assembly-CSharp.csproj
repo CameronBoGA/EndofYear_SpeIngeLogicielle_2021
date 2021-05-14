@@ -43,7 +43,9 @@
      <Compile Include="Assets\CodeMonkey\Utils\UI_Bar.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\World_Mesh.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\UI_TextComplex.cs" />
+     <Compile Include="Assets\Codes\scene1\FinishRun.cs" />
      <Compile Include="Assets\Scripts\EditorObject.cs" />
+     <Compile Include="Assets\Codes\scene1\FailSimulation.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\Button_Sprite.cs" />
      <Compile Include="Assets\CodeMonkey\MonoBehaviours\CameraFollowSetup.cs" />
      <Compile Include="Assets\CodeMonkey\MonoBehaviours\CameraFollow.cs" />
@@ -66,8 +68,6 @@
      <Compile Include="Assets\CodeMonkey\CMDebug.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\FunctionPeriodic.cs" />
      <Compile Include="Assets\CodeMonkey\Utils\FunctionUpdater.cs" />
-     <Compile Include="Assets\Codes\scene1\FailSimulation.cs" />
-     <Compile Include="Assets\Codes\scene1\FinishRun.cs" />
      <None Include="Assets\CodeMonkey\README.txt" />
     <Reference Include="UnityEngine">
         <HintPath>G:/UnityHub/datas/2020.3.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

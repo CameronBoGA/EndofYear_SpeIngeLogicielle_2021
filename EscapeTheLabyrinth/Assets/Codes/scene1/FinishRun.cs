@@ -9,7 +9,7 @@ public class FinishRun : MonoBehaviour
     private DateTime startTime;
     private DateTime finishTime;
     private TimeSpan ResTime;
-    private bool endReached;
+    private bool endReached = false;
 
     public TimeSpan getResultTime()
     {
