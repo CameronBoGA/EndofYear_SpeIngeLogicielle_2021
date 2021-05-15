@@ -16,10 +16,12 @@ public class FinishRun : MonoBehaviour
         switch (endReached)
         {
             case true:
+                UnityEngine.Debug.Log("case: " + endReached);
                 return ResTime;
                 break;
             
             case false:
+                UnityEngine.Debug.Log("case: " + endReached);
                 return TimeSpan.Zero;
                 break;
         }

@@ -19,7 +19,7 @@ public class NPCMove : MonoBehaviour
     private bool flag = true;
 
     
-
+    
     public void setFailedStatus(bool newStatus)
     {
         failedStatus = newStatus;
@@ -70,7 +70,7 @@ public class NPCMove : MonoBehaviour
                                                 GetComponent<FinishRun>().
                                                 getResultTime();
                                 
-                                UnityEngine.Debug.Log(res);
+                                UnityEngine.Debug.Log("Stopped");
                             }
                         } // END if (agent.remainingDistance <= agent.stoppingDistance)
                     } // END if (!agent.pathPending)
