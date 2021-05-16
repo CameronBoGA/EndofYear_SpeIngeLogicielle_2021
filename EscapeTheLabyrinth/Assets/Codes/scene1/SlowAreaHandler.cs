@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// ralentis l'IA si elle touche la zone lente
 public class SlowAreaHandler : MonoBehaviour
 {
     public NavMeshAgent agent;
@@ -13,6 +14,7 @@ public class SlowAreaHandler : MonoBehaviour
 
     void OnTriggerEnter(Collider other) 
     {
+        // Change la vitesse de l'IA
         agent.speed = (float) lowSpeed;
 
     }
