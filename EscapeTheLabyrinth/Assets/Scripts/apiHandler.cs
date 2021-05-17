@@ -12,25 +12,15 @@ public class apiHandler : MonoBehaviour
 {
     /* URL for maps*/
     private readonly string baseURL = "http://127.0.0.1:8080/api/maps";
-    /*Row retrieved from Database*/
-    private string[] rows;
+
     /* Level manipulation for Json */
     private LevelEditor level;
     // Master class
     public Manager prog;
     
-    //Editor
-    public EditorObject eo;
-    //private string mapDB;
-    /*public enum ObjectType {Wall, Touret, Player, Swamp};
-    
-    private struct Desc
-    {
-        public Vector3 pos;
-        public ObjectType objectType;
-    }
-    private Desc data;
-    Desc[] newObj;*/
+    // Obj Mention
+    GameObject newObj;
+
     private void Start()
     {
         CreateEditor();
@@ -46,6 +36,7 @@ public class apiHandler : MonoBehaviour
     /* Saving Level */
     public void SaveLevel()
     {
+        Debug.Log("Inside the function");
         /* Init */
         string creatorName =  "";
         string leveltitle = "";
@@ -134,14 +125,15 @@ public class apiHandler : MonoBehaviour
         
         /* Fill the map */
         //LoadLevelFromWeb(levelFile);
-        CreateFromString();
+        //CreateFromString();
     }
 
     IEnumerator loadMapOnDB(string levelname)
     {
-        //mapDB = "";
-    
-        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get("http://127.0.0.1:8080/api/maps/1"))
+
+        string[] rows;
+
+        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get("http://127.0.0.1:8080/api/maps/10"))
         {
             yield return mapInfoRequest.SendWebRequest();
             if (mapInfoRequest.result == UnityWebRequest.Result.ConnectionError) // Error
@@ -157,10 +149,8 @@ public class apiHandler : MonoBehaviour
             }
             else // Success
             {
-                string json = mapInfoRequest.downloadHandler.text;
-                //Debug.Log("JSon: "+json);
-                //Player[] player = JsonHelper.FromJson<Player>(json);
-                //level = JsonUtility.FromJson<LevelEditor>(json);
+                string rawdata = mapInfoRequest.downloadHandler.text;
+                
                 //Reformating return message
                 /*string mess = mapInfoRequest.downloadHandler.text;
                 //getting beginning
@@ -172,38 +162,65 @@ public class apiHandler : MonoBehaviour
                 // Reformating the end
                 mess = mess + "]}";
                 // Removing special characters
-                mapDB = mess.Replace(@"\", "");
+                mapDB = mess.Replace(@"\", "");*/
                 
                 //Debug.Log("full request: "+mapDB);
-                rows = mapDB.Split(new string[] { "}," }, StringSplitOptions.None);
+                rows = rawdata.Split(new string[] { "}," }, StringSplitOptions.None);
                 Debug.Log(String.Format("There are {0} comments.", rows.Length));
                 int ArraySize = rows.Length / 2;
-                
+
+                //listdata = new EditorObject.data[ArraySize];
+                //ObjectDefinition[] listObj = new ObjectDefinition[ArraySize];
+                //public ObjectDefinition def;
                 for (int i = 0, counter = 0; i != rows.Length; i++, counter++) {
+                    
                     //getting the position of the object
                     float x = getFloat(rows[i], "x", ",");
                     rows[i] = rows[i].Substring(rows[i].IndexOf(','));
                     float y = getFloat(rows[i], "y", ",");
                     rows[i] = rows[i].Substring(rows[i].IndexOf(','));
                     float z = getFloat(rows[i], "z", "\0");
+                    
                     //getting the object type
                     i = i + 1;
                     int pos = rows[i].IndexOf(':') + 1;
-                    Debug.Log("objtype"+rows[i][pos]);
+                    
                     //Recreating the objects
-                    newObj = new Desc[ArraySize];
-                    newObj[counter] = new Desc();
-                    newObj[counter].pos = new Vector3(x, y, z);
+                    /*listObj[counter] = new ObjectDefinition();
+                    listObj[counter].pos = new Vector3(x, y, z);
                     if (rows[i][pos] == '0')
-                        newObj[counter].objectType = ObjectType.Wall;
+                        listObj[counter].objectType = ObjectDefinition.Typology.Wall;
                     if (rows[i][pos] == '2')
-                        newObj[counter].objectType = ObjectType.Player;
-                }*/
-                /*Converting to Json and finally to Level */ 
-                //string json = JsonHelper.ToJson(newObj, true);
-                //Debug.Log("json: "+json);
+                        listObj[counter].objectType = ObjectDefinition.Typology.Player;*/
+
+                    //Creating obj
+                    if (rows[i][pos] == '0')
+                        newObj = Instantiate(prog.wall, transform.position, Quaternion.identity);
+                    if (rows[i][pos] == '2')
+                        newObj = Instantiate(prog.player, transform.position, Quaternion.identity);
+                    newObj.transform.position = new Vector3(x, y, z);
+                    newObj.layer = 9;
+                    EditorObject eo = newObj.AddComponent<EditorObject>();
+                    eo.data.pos = newObj.transform.position;
+                    if (rows[i][pos] == '0')
+                        eo.data.objectType = EditorObject.ObjectType.Wall;
+                    if (rows[i][pos] == '2')
+                        eo.data.objectType = EditorObject.ObjectType.Player;
+                    /*listData[counter] = newObj.AddComponent<EditorObject.data>();
+                    listData[counter].pos = new Vector3(x, y, z);
+                    if (rows[i][pos] == '0')
+                        listData[counter].objectType = EditorObject.ObjectType.Wall;
+                    if (rows[i][pos] == '2')
+                        listData[counter].objectType = EditorObject.ObjectType.Player;*/
+                }
+
                 
-                //newObj = null;   
+                /* Converting to Json and finally to Level */ 
+                /*Debug.Log("Start");
+                string json = JsonHelper.ToJson(listObj, true);
+                Debug.Log("Mid");
+                level = JsonUtility.FromJson<LevelEditor>(json);
+                Debug.Log("After"); */
             }
         }
     }

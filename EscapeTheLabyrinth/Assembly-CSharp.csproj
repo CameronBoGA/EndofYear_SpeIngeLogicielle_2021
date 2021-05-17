@@ -39,12 +39,13 @@
      <Compile Include="Assets\Scripts\EditorObject.cs" />
      <Compile Include="Assets\Scripts\apiHandler.cs" />
      <Compile Include="Assets\Scripts\LevelEditor.cs" />
+     <Compile Include="Assets\Scripts\JsonHelper.cs" />
      <Compile Include="Assets\RestAPIs\Scripts\PokeAPIController.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\CubePlacer.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
-     <Compile Include="Assets\Scripts\JsonHelper.cs" />
+     <Compile Include="Assets\Scripts\ObjectDefinition.cs" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
