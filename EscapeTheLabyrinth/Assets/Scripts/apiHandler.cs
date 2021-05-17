@@ -2,38 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using SimpleJSON;
 using UnityEngine.UI;
 using TMPro;
 using System;
 using System.IO;
+using System.Globalization;
 
 public class apiHandler : MonoBehaviour
 {
     /* URL for maps*/
     private readonly string baseURL = "http://127.0.0.1:8080/api/maps";
-    
     /*Row retrieved from Database*/
     private string[] rows;
-
     /* Level manipulation for Json */
     private LevelEditor level;
-    public bool playerPlaced = false;
-    public GameObject wall;
-    public GameObject player;
-    private string mapDB;
-
-    /* Misc Animations and UI */
-    public bool saveLoadMenuOpen = false;
-    public Animator saveUIAnimation;
-    public Animator loadUIAnimation;
-    public Text levelMessage;
-    public InputField levelNameSave;
-    public InputField creatorNameSave;
-    public InputField levelNameLoad;
-    private bool saveLoadPositionIn = false;
-    public Animator messageAnim;
-
+    // Master class
+    public Manager prog;
+    
+    //Editor
+    public EditorObject eo;
+    //private string mapDB;
+    /*public enum ObjectType {Wall, Touret, Player, Swamp};
+    
+    private struct Desc
+    {
+        public Vector3 pos;
+        public ObjectType objectType;
+    }
+    private Desc data;
+    Desc[] newObj;*/
     private void Start()
     {
         CreateEditor();
@@ -46,50 +43,49 @@ public class apiHandler : MonoBehaviour
         return level;
     }
 
+    /* Saving Level */
     public void SaveLevel()
     {
         /* Init */
-        string creatorName;
-    
+        string creatorName =  "";
+        string leveltitle = "";
+
         /*Creating a json with all objects defined in Editor Object*/
         EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
         foreach (EditorObject obj in foundObjects)
             level.editorObjects.Add(obj.data);
         string json = JsonUtility.ToJson(level);
-        string folder = Application.dataPath + "/LevelData/";
-        string leveltitle = "";
 
         /* Setting the Name of The map*/
-        if (levelNameSave.text == "")
+        if (prog.levelNameSave.text == "")
             leveltitle = "new_level.json";
         else
-            leveltitle = levelNameSave.text + ".json";
+            leveltitle = prog.levelNameSave.text + ".json";
         
-        /* Setting the Name of The creator*/
-        if (creatorNameSave.text == "") {
+        /* Setting the Name of The creator */
+        if (prog.creatorNameSave.text == "") {
             creatorName = "Bob";
-            levelMessage.text = "As your name is empty it has been set to Bob";
+            prog.levelMessage.text = "As your name is empty it has been set to Bob";
         } else
-            creatorName = creatorNameSave.text;
+            creatorName = prog.creatorNameSave.text;
 
         /* Animation for Panel Handling */
-        saveUIAnimation.SetTrigger("SaveLoadOut");
-        saveLoadPositionIn = false;
-        saveLoadMenuOpen = false;
-        
+        prog.saveUIAnimation.SetTrigger("SaveLoadOut");
+        prog.saveLoadPositionIn = false;
+        prog.saveLoadMenuOpen = false;
+
         /* Resetting Variables */
-        levelNameSave.text = "";
-        levelNameSave.DeactivateInputField();
-        
+        prog.levelNameSave.text = "";
+        prog.levelNameSave.DeactivateInputField();
+
         /* Final Message of interaction and animation handling */
-        messageAnim.Play("MessageFade", 0, 0);
+        prog.messageAnim.Play("MessageFade", 0, 0);
+
         StartCoroutine(saveMapOnDB(leveltitle, creatorName, json));
     }
 
     IEnumerator saveMapOnDB(string leveltitle, string creatorName, string jsonString)
-    {
-        //string jsonString = File.ReadAllText(Application.dataPath+"/LevelData/Demo.json");
-        
+    {   
         /* Adding rows to form which will be sent to DB */
         WWWForm formdata = new WWWForm();
         formdata.AddField("title", leveltitle);
@@ -106,76 +102,130 @@ public class apiHandler : MonoBehaviour
         }
         else
         {
-            levelMessage.text = "Map upload complete!";
+            prog.levelMessage.text = "Map upload complete!";
         }
+        SaveLevelToLocal(leveltitle);
+    }
+    public void SaveLevelToLocal(string levelFile)
+    {
+        EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
+        foreach (EditorObject obj in foundObjects)
+            level.editorObjects.Add(obj.data);
+        
+        string json = JsonUtility.ToJson(level);
+        string folder = Application.dataPath + "/Imports/";
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, levelFile);
+        if (File.Exists(path))
+	        File.Delete(path);
+        File.WriteAllText(path, json);
+    }
+
+    public void LoadLevel()
+    {
+        /* Retrieving the Level Name */
+        string levelFile = prog.levelNameLoad.text;
+        if (prog.levelNameLoad.text == "")
+            levelFile = "new_level";
+        
+        /* Calling Function for db management */
+        StartCoroutine(loadMapOnDB(levelFile));
+        
+        /* Fill the map */
+        //LoadLevelFromWeb(levelFile);
+        CreateFromString();
     }
 
     IEnumerator loadMapOnDB(string levelname)
     {
-
-        /* Must find a specific map on db */
-
-        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get(baseURL))
+        //mapDB = "";
+    
+        using (UnityWebRequest mapInfoRequest = UnityWebRequest.Get("http://127.0.0.1:8080/api/maps/1"))
         {
             yield return mapInfoRequest.SendWebRequest();
             if (mapInfoRequest.result == UnityWebRequest.Result.ConnectionError) // Error
             {
-                levelMessage.text = levelname + " could not be found!";
-                loadUIAnimation.SetTrigger("SaveLoadOut");
-                saveLoadPositionIn = false;
-                saveLoadMenuOpen = false;
-                messageAnim.Play("MessageFade", 0, 0);
-                levelNameLoad.DeactivateInputField();
+                prog.levelMessage.text = levelname + " could not be found!";
+                prog.loadUIAnimation.SetTrigger("SaveLoadOut");
+                prog.saveLoadPositionIn = false;
+                prog.saveLoadMenuOpen = false;
+                prog.messageAnim.Play("MessageFade", 0, 0);
+                prog.levelNameLoad.DeactivateInputField();
                 Debug.LogError(mapInfoRequest.error);
                 yield break;
             }
             else // Success
             {
-                Debug.Log("Received: " + mapInfoRequest.downloadHandler.text);
-                mapDB = mapInfoRequest.downloadHandler.text;
-                /*string fulldata = mapInfoRequest.downloadHandler.text;
-                rows = fulldata.Split(new string[] { "<br>" }, StringSplitOptions.None);
+                string json = mapInfoRequest.downloadHandler.text;
+                //Debug.Log("JSon: "+json);
+                //Player[] player = JsonHelper.FromJson<Player>(json);
+                //level = JsonUtility.FromJson<LevelEditor>(json);
+                //Reformating return message
+                /*string mess = mapInfoRequest.downloadHandler.text;
+                //getting beginning
+                mess = mess.Substring(mess.IndexOf(levelname));
+                //getting end
+                mess = mess.Substring(0, mess.IndexOf("]"));
+                //Cutting the beggining again
+                mess = mess.Substring(mess.IndexOf("{"));
+                // Reformating the end
+                mess = mess + "]}";
+                // Removing special characters
+                mapDB = mess.Replace(@"\", "");
+                
+                //Debug.Log("full request: "+mapDB);
+                rows = mapDB.Split(new string[] { "}," }, StringSplitOptions.None);
                 Debug.Log(String.Format("There are {0} comments.", rows.Length));
-                foreach (string row in rows)
-                {
-                    Debug.Log(row);
+                int ArraySize = rows.Length / 2;
+                
+                for (int i = 0, counter = 0; i != rows.Length; i++, counter++) {
+                    //getting the position of the object
+                    float x = getFloat(rows[i], "x", ",");
+                    rows[i] = rows[i].Substring(rows[i].IndexOf(','));
+                    float y = getFloat(rows[i], "y", ",");
+                    rows[i] = rows[i].Substring(rows[i].IndexOf(','));
+                    float z = getFloat(rows[i], "z", "\0");
+                    //getting the object type
+                    i = i + 1;
+                    int pos = rows[i].IndexOf(':') + 1;
+                    Debug.Log("objtype"+rows[i][pos]);
+                    //Recreating the objects
+                    newObj = new Desc[ArraySize];
+                    newObj[counter] = new Desc();
+                    newObj[counter].pos = new Vector3(x, y, z);
+                    if (rows[i][pos] == '0')
+                        newObj[counter].objectType = ObjectType.Wall;
+                    if (rows[i][pos] == '2')
+                        newObj[counter].objectType = ObjectType.Player;
                 }*/
+                /*Converting to Json and finally to Level */ 
+                //string json = JsonHelper.ToJson(newObj, true);
+                //Debug.Log("json: "+json);
+                
+                //newObj = null;   
             }
         }
     }
-    public void LoadLevel()
-    {
-        
-        /* Retrieving the Level Name */
-        string levelFile = "";
-        if (levelNameLoad.text == "")
-            levelFile = "new_level.json";
-        else
-            levelFile = levelNameLoad.text + ".json";
-        
-        /* Calling Function for db management */
-        StartCoroutine(loadMapOnDB(levelFile));
 
-        /* If the level is found, it will proceed down, if not if would have been stoppped in coroutine */
-        EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
-        foreach (EditorObject obj in foundObjects)
-        Destroy(obj.gameObject);
-        playerPlaced = false;
-        
-        /* Fill the map */
-        CreateFromString();
+    float getFloat(string number, string axis, string endMark)
+    {
+        number = number.Substring(number.IndexOf(axis) + 3, 16);
+        float num = float.Parse(number, CultureInfo.InvariantCulture.NumberFormat);
+        return (num);
     }
 
     void CreateFromString()
     {
         /* Initialisation */
         GameObject newObj;
-
+        Debug.Log("In creating from String");
         for (int i = 0; i < level.editorObjects.Count; i++)
         {
+            Debug.Log("In the loop");
             if (level.editorObjects[i].objectType == EditorObject.ObjectType.Wall)
                 {
-                    newObj = Instantiate(wall, transform.position, Quaternion.identity);
+                    newObj = Instantiate(prog.wall, transform.position, Quaternion.identity);
                     newObj.transform.position = level.editorObjects[i].pos;
                     newObj.layer = 9;
                     EditorObject eo = newObj.AddComponent<EditorObject>();
@@ -184,24 +234,44 @@ public class apiHandler : MonoBehaviour
                 }
             else if (level.editorObjects[i].objectType == EditorObject.ObjectType.Player)
                 {
-                    newObj = Instantiate(player, transform.position, Quaternion.identity);
+                    newObj = Instantiate(prog.player, transform.position, Quaternion.identity);
                     newObj.layer = 9;
                     newObj.transform.position = level.editorObjects[i].pos;
-                    playerPlaced = true;
+                    prog.playerPlaced = true;
                     EditorObject eo = newObj.AddComponent<EditorObject>();
                     eo.data.pos = newObj.transform.position;
                     eo.data.objectType = EditorObject.ObjectType.Player;
                 }
             }
-        
+
         /*Misc Animation and UI Handling*/
-        levelNameLoad.text = "";
-        levelNameLoad.DeactivateInputField();
-        loadUIAnimation.SetTrigger("SaveLoadOut");
-        saveLoadPositionIn = false;
-        saveLoadMenuOpen = false;
-        levelMessage.text = "Level loading...done.";
-        messageAnim.Play("MessageFade", 0, 0);
+        prog.levelNameLoad.text = "";
+        prog.levelNameLoad.DeactivateInputField();
+        prog.loadUIAnimation.SetTrigger("SaveLoadOut");
+        prog.saveLoadPositionIn = false;
+        prog.saveLoadMenuOpen = false;
+        prog.levelMessage.text = "Level loading...done.";
+        prog.messageAnim.Play("MessageFade", 0, 0);
+    }
+
+    public void LoadLevelFromWeb(string levelfile)
+    {
+        string folder = Application.dataPath + "/Imports/";
+        string levelFile = "";
+        if (prog.levelNameLoad.text == "")
+            levelFile = "new_level.json";
+        
+        string path = Path.Combine(folder, levelFile);
+        if (File.Exists(path))
+        {
+            EditorObject[] foundObjects = FindObjectsOfType<EditorObject>();
+            foreach (EditorObject obj in foundObjects)
+                Destroy(obj.gameObject);
+            prog.playerPlaced = false;
+            
+            string json = File.ReadAllText(path);
+            level = JsonUtility.FromJson<LevelEditor>(json);
+            CreateFromString();
+        }
     }
 }
-

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 public class EditorObject : MonoBehaviour
 {
     public enum ObjectType {Wall, Touret, Player, Swamp};

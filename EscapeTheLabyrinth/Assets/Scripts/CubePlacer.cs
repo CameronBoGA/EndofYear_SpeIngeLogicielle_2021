@@ -48,6 +48,7 @@ public class CubePlacer : MonoBehaviour
         RaycastHit hitInfo;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         colliding = false;
+        
         // Enable the object selected to follow the mouse cursor
         /*mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);*/
@@ -108,6 +109,7 @@ public class CubePlacer : MonoBehaviour
             eo.data.pos = newobj.transform.position;
             eo.data.objectType = EditorObject.ObjectType.Wall;
         }
+        
         if (itemOption == ItemList.Player)
 	    {
             if (ms.playerPlaced == false)
@@ -123,12 +125,3 @@ public class CubePlacer : MonoBehaviour
         }
     }
 }
-/*
-    private void PlaceCubeNear(Vector3 clickPoint)
-    {
-        var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
-        //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;
-        Instantiate(wall, finalPosition, Quaternion.identity);
-        
-    }
-}*/
