@@ -114,7 +114,9 @@ public class CubePlacer : MonoBehaviour
 	    {
             if (ms.playerPlaced == false)
 	        {
-                prog.StartPT.transform.position = finalPosition;
+                Debug.Log("In Placer, Start: "+finalPosition);
+                //prog.StartPT.transform.position = finalPosition;
+                newobj = Instantiate(prog.StartPT, finalPosition, Quaternion.identity);
                 newobj = Instantiate(prog.player, dummy, Quaternion.identity);
                 ms.playerPlaced = true;
                 EditorObject eo = newobj.AddComponent<EditorObject>();
@@ -125,7 +127,8 @@ public class CubePlacer : MonoBehaviour
         }
         else if (itemOption == ItemList.End)
 	    {
-            prog.EndPT.transform.position = finalPosition;
+            //prog.EndPT.transform.position = finalPosition;
+            newobj = Instantiate(prog.EndPT, finalPosition, Quaternion.identity);
             newobj = Instantiate(prog.EndPT, dummy, Quaternion.identity);
             EditorObject eo = newobj.AddComponent<EditorObject>();
             eo.data.pos = newobj.transform.position;
@@ -135,7 +138,6 @@ public class CubePlacer : MonoBehaviour
         else if (itemOption == ItemList.Mud)
 	    {
             newobj = Instantiate(prog.mud, finalPosition, Quaternion.identity);
-            Debug.Log("In Placer, Start: "+finalPosition);
             newobj.layer = 9;
             EditorObject eo = newobj.AddComponent<EditorObject>();
             eo.data.pos = newobj.transform.position;
