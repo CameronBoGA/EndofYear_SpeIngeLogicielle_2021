@@ -38,6 +38,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\EditorObject.cs" />
      <Compile Include="Assets\Scripts\apiHandler.cs" />
+     <Compile Include="Assets\Scripts\InformationManager.cs" />
      <Compile Include="Assets\Scripts\LevelEditor.cs" />
      <Compile Include="Assets\Scripts\JsonHelper.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
@@ -45,7 +46,6 @@
      <Compile Include="Assets\Scripts\InformationApi.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
-     <Compile Include="Assets\Scripts\InformationManager.cs" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -664,10 +664,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{ebfdb604-8446-bf25-0911-935190883441}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
