@@ -11,6 +11,9 @@ public class Manager : MonoBehaviour
     public GameObject wall;
     public GameObject player;
     public CubePlacer user;
+    public GameObject mud;
+    public GameObject StartPT;
+    public GameObject EndPT; 
 
      /* User Interface */
     [HideInInspector]
@@ -23,10 +26,6 @@ public class Manager : MonoBehaviour
     public Animator messageAnim;
     public bool saveLoadPositionIn = false;
     public Text levelMessage;
-
-    void Start()
-    {
-    }
 
     public void ChooseSave()
     {
@@ -74,6 +73,12 @@ public class Manager : MonoBehaviour
         //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
     }
 
+    public void ChooseEnd()
+    {
+        user.itemOption = CubePlacer.ItemList.End;
+        //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
+    }
+
     public void ChooseCreate()
     {
         user.manipulateOption = CubePlacer.LevelManipulation.Create;
@@ -84,10 +89,5 @@ public class Manager : MonoBehaviour
     {
         user.manipulateOption = CubePlacer.LevelManipulation.Destroy;
         //user.mr.enabled = false;
-    }
-    
-    public void ChooseLaunchAi()
-    {
-        Debug.Log("AI Lauched, Terminator Programm Initiated");
     }
 }
