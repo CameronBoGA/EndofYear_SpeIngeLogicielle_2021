@@ -36,8 +36,42 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\EditorObject.cs" />
+     <Compile Include="Assets\Scripts\apiHandler.cs" />
+     <Compile Include="Assets\Scripts\InformationManager.cs" />
+     <Compile Include="Assets\Scripts\NPCMove.cs" />
+     <Compile Include="Assets\Scripts\LevelEditor.cs" />
+     <Compile Include="Assets\Scripts\SlowAreaHandler.cs" />
+     <Compile Include="Assets\Scripts\JsonHelper.cs" />
+     <Compile Include="Assets\Scripts\NavMeshBaker.cs" />
+     <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\CubePlacer.cs" />
+     <Compile Include="Assets\Scripts\InformationApi.cs" />
+     <Compile Include="Assets\Scripts\MainMenu.cs" />
+     <Compile Include="Assets\Scripts\FinishRun.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\FailSimulation.cs" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro.cginc" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\Imports\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -634,6 +668,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="NavMeshComponents.csproj">
+      <Project>{930dfc1f-547f-06db-9db1-4750477c44ac}</Project>
+      <Name>NavMeshComponents</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponentsEditor.csproj">
+      <Project>{2c25c18f-ed60-9942-d848-20ae79355db3}</Project>
+      <Name>NavMeshComponentsEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
