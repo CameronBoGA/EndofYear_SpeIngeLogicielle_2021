@@ -201,15 +201,27 @@ public class apiHandler : MonoBehaviour
                     if (rows[i][pos] == '0')
                         newObj = Instantiate(prog.wall, transform.position, Quaternion.identity);
                     if (rows[i][pos] == '2')
-                        newObj = Instantiate(prog.player, transform.position, Quaternion.identity);
+                        newObj = Instantiate(prog.StartPT, transform.position, Quaternion.identity);
+                    if (rows[i][pos] == '1')
+                        newObj = Instantiate(prog.caltrop, transform.position, Quaternion.identity);
+                    if (rows[i][pos] == '3')
+                        newObj = Instantiate(prog.mud, transform.position, Quaternion.identity);
+                    if (rows[i][pos] == '4')
+                        newObj = Instantiate(prog.EndPT, transform.position, Quaternion.identity);
                     newObj.transform.position = new Vector3(x, y, z);
                     newObj.layer = 9;
                     EditorObject eo = newObj.AddComponent<EditorObject>();
                     eo.data.pos = newObj.transform.position;
                     if (rows[i][pos] == '0')
                         eo.data.objectType = EditorObject.ObjectType.Wall;
-                    if (rows[i][pos] == '2')
+                    if (rows[i][pos] == '1')
+                        eo.data.objectType = EditorObject.ObjectType.Caltrop;
+                     if (rows[i][pos] == '2')
                         eo.data.objectType = EditorObject.ObjectType.Player;
+                    if (rows[i][pos] == '3')
+                        eo.data.objectType = EditorObject.ObjectType.Mud;
+                     if (rows[i][pos] == '4')
+                        eo.data.objectType = EditorObject.ObjectType.End;
                 }
                 /*Misc Animation and UI Handling*/
                 prog.levelNameLoad.text = "";
@@ -252,8 +264,7 @@ public class apiHandler : MonoBehaviour
                 // Récupérér dans une string le résultat de la requête
                 string rawdata = mapInfoRequest.downloadHandler.text;
                 rawdata = rawdata.Substring(rawdata.LastIndexOf("id"));
-                // it will only be able to handle a max of 20 rows on database
-                //because C# PARSING IS CRAP
+                // it will only be able to handle a max of 9 rows on databas
                 index = Convert.ToInt16(rawdata[4]);
             }
         }

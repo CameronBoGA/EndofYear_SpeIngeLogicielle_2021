@@ -11,13 +11,12 @@ public class CubePlacer : MonoBehaviour
     public LevelManipulation manipulateOption = LevelManipulation.Create;
 
     // List of Items That can be placed
-    public enum ItemList {Wall, Touret, Player, Swamp};
+    public enum ItemList {Wall, Caltrop, Player, Mud, End};
     [HideInInspector]
     public ItemList itemOption = ItemList.Wall;
 
     // Item That can be placed -> Prefabs
-    public GameObject wall;
-    public GameObject player;
+    public Manager prog;
 
     // Managing Avaibility for object placement
     private Vector3 mousePos;
@@ -98,11 +97,12 @@ public class CubePlacer : MonoBehaviour
     private void CreateObject(Vector3 clickPoint)
     {
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
+        Vector3 dummy = new Vector3(0.0f, 0, 0);
         GameObject newobj;
     
 	    if (itemOption == ItemList.Wall)
 	    {
-            newobj = Instantiate(wall, finalPosition, Quaternion.identity);
+            newobj = Instantiate(prog.wall, finalPosition, Quaternion.identity);
             newobj.layer = 9;
             newobj.tag = "Wall";
             EditorObject eo = newobj.AddComponent<EditorObject>();
@@ -110,18 +110,44 @@ public class CubePlacer : MonoBehaviour
             eo.data.objectType = EditorObject.ObjectType.Wall;
         }
         
-        if (itemOption == ItemList.Player)
+        else if (itemOption == ItemList.Player)
 	    {
             if (ms.playerPlaced == false)
 	        {
-                newobj = Instantiate(player, finalPosition, Quaternion.identity);
-                newobj.layer = 9;
-                newobj.tag = "Player";
+                prog.StartPT.transform.position = finalPosition;
+                newobj = Instantiate(prog.player, dummy, Quaternion.identity);
                 ms.playerPlaced = true;
                 EditorObject eo = newobj.AddComponent<EditorObject>();
                 eo.data.pos = newobj.transform.position;
                 eo.data.objectType = EditorObject.ObjectType.Player;
+                Destroy(newobj);
             }
+        }
+        else if (itemOption == ItemList.End)
+	    {
+            prog.EndPT.transform.position = finalPosition;
+            newobj = Instantiate(prog.EndPT, dummy, Quaternion.identity);
+            EditorObject eo = newobj.AddComponent<EditorObject>();
+            eo.data.pos = newobj.transform.position;
+            eo.data.objectType = EditorObject.ObjectType.End;
+            Destroy(newobj);
+        }
+        else if (itemOption == ItemList.Mud)
+	    {
+            newobj = Instantiate(prog.mud, finalPosition, Quaternion.identity);
+            Debug.Log("In Placer, Start: "+finalPosition);
+            newobj.layer = 9;
+            EditorObject eo = newobj.AddComponent<EditorObject>();
+            eo.data.pos = newobj.transform.position;
+            eo.data.objectType = EditorObject.ObjectType.Mud;
+        }
+        else if (itemOption == ItemList.Caltrop)
+	    {
+            newobj = Instantiate(prog.caltrop, finalPosition, Quaternion.identity);
+            newobj.layer = 9;
+            EditorObject eo = newobj.AddComponent<EditorObject>();
+            eo.data.pos = newobj.transform.position;
+            eo.data.objectType = EditorObject.ObjectType.Caltrop;
         }
     }
 }

@@ -10,7 +10,12 @@ public class Manager : MonoBehaviour
     public bool playerPlaced = false;
     public GameObject wall;
     public GameObject player;
+    public GameObject mud;
+    public GameObject caltrop;
+    public GameObject StartPT;
+    public GameObject EndPT; 
     public CubePlacer user;
+    
 
      /* User Interface */
     [HideInInspector]
@@ -26,6 +31,7 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+        //Manager _manager = Singleton._instance.manager;
     }
 
     public void ChooseSave()
@@ -85,9 +91,9 @@ public class Manager : MonoBehaviour
         user.manipulateOption = CubePlacer.LevelManipulation.Destroy;
         //user.mr.enabled = false;
     }
-    
-    public void ChooseLaunchAi()
+    public void ChooseEnd()
     {
-        Debug.Log("AI Lauched, Terminator Programm Initiated");
+        user.itemOption = CubePlacer.ItemList.End;
+        //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
     }
 }

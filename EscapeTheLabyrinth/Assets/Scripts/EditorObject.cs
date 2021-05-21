@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EditorObject : MonoBehaviour
 {
-    public enum ObjectType {Wall, Touret, Player, Swamp};
+    public enum ObjectType {Wall, Caltrop, Player, Mud, End};
     [Serializable]
     public struct Data
     {
