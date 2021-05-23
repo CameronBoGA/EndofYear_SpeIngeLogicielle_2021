@@ -13,7 +13,10 @@ public class FinishRun : MonoBehaviour
 
     // Recuperation de temps écoulé du test
     public TimeSpan getResultTime()
-    {   
+    {
+        /*if (endReached == true)
+            return ResTime;
+        return TimeSpan.Zero;*/
         switch (endReached)
         {
             case true:
@@ -32,14 +35,12 @@ public class FinishRun : MonoBehaviour
         // capture du temps actuel
         finishTime = DateTime.Now;
         //UnityEngine.Debug.Log("on finish" + finishTime);
-
         startTime = GameObject.Find("Agent").GetComponent<NPCMove>().getStartTime();
         //UnityEngine.Debug.Log("on start" + startTime);
-
         // calcule du temps passé en simu jusqu'a arrêt de l'IA sur le point
         ResTime = finishTime - startTime;
-
         endReached = true;
         //UnityEngine.Debug.Log( getResultTime() + "secondes");
     }
 }
+

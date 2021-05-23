@@ -96,4 +96,14 @@ public class Manager : MonoBehaviour
         user.itemOption = CubePlacer.ItemList.End;
         //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
     }
+    public void ChooseMud()
+    {
+        user.itemOption = CubePlacer.ItemList.Mud;
+        //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
+    }
+    public void ChooseCaltrop()
+    {
+        user.itemOption = CubePlacer.ItemList.Caltrop;
+        //CubePlacer.mesh = player.GetComponent<MeshFilter>().mesh;
+    }
 }

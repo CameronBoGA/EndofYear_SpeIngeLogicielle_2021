@@ -16,7 +16,6 @@ public class CubePlacer : MonoBehaviour
     public ItemList itemOption = ItemList.Wall;
 
     // Item That can be placed -> Prefabs
-    public Manager prog;
 
     // Managing Avaibility for object placement
     private Vector3 mousePos;
@@ -29,7 +28,7 @@ public class CubePlacer : MonoBehaviour
     public Material badPlace;
 
     // Reference to the Manager Script for overall information
-    public Manager ms;
+    public Manager prog;
 
     private void Awake()
     {
@@ -77,13 +76,13 @@ public class CubePlacer : MonoBehaviour
                 else if (colliding == true && manipulateOption == LevelManipulation.Destroy)
                 {
                     if (hitInfo.collider.gameObject.name.Contains("PlayerModel"))
-                        ms.playerPlaced = false;
+                        prog.playerPlaced = false;
                     Destroy(hitInfo.collider.gameObject);
                 }
                 else if (colliding == true && manipulateOption == LevelManipulation.Destroy)
                 {
                     if (hitInfo.collider.gameObject.name.Contains("PlayerModel"))
-                        ms.playerPlaced = false;
+                        prog.playerPlaced = false;
                     Destroy(hitInfo.collider.gameObject);
                 }
             }
@@ -99,6 +98,7 @@ public class CubePlacer : MonoBehaviour
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
         Vector3 dummy = new Vector3(0.0f, 0, 0);
         GameObject newobj;
+        GameObject temp;
     
 	    if (itemOption == ItemList.Wall)
 	    {
@@ -109,16 +109,16 @@ public class CubePlacer : MonoBehaviour
             eo.data.pos = newobj.transform.position;
             eo.data.objectType = EditorObject.ObjectType.Wall;
         }
-        
         else if (itemOption == ItemList.Player)
 	    {
-            if (ms.playerPlaced == false)
+            if (prog.playerPlaced == false)
 	        {
+                prog.StartPT.transform.position = finalPosition;
                 Debug.Log("In Placer, Start: "+finalPosition);
                 //prog.StartPT.transform.position = finalPosition;
-                newobj = Instantiate(prog.StartPT, finalPosition, Quaternion.identity);
+                temp = Instantiate(prog.StartPT, finalPosition, Quaternion.identity);
                 newobj = Instantiate(prog.player, dummy, Quaternion.identity);
-                ms.playerPlaced = true;
+                prog.playerPlaced = true;
                 EditorObject eo = newobj.AddComponent<EditorObject>();
                 eo.data.pos = newobj.transform.position;
                 eo.data.objectType = EditorObject.ObjectType.Player;
@@ -127,13 +127,15 @@ public class CubePlacer : MonoBehaviour
         }
         else if (itemOption == ItemList.End)
 	    {
+            Debug.Log("In Placer, End: "+finalPosition);
+            prog.EndPT.transform.position = finalPosition;
             //prog.EndPT.transform.position = finalPosition;
             newobj = Instantiate(prog.EndPT, finalPosition, Quaternion.identity);
-            newobj = Instantiate(prog.EndPT, dummy, Quaternion.identity);
+            //newobj = Instantiate(prog.EndPT, dummy, Quaternion.identity);
             EditorObject eo = newobj.AddComponent<EditorObject>();
             eo.data.pos = newobj.transform.position;
             eo.data.objectType = EditorObject.ObjectType.End;
-            Destroy(newobj);
+            //destroy(newobj);
         }
         else if (itemOption == ItemList.Mud)
 	    {

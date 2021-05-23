@@ -44,15 +44,14 @@
      <Compile Include="Assets\Scripts\AI_Scripts\FinishRun.cs" />
      <Compile Include="Assets\Scripts\DesignPatterns\Singleton.cs" />
      <Compile Include="Assets\Scripts\LevelEditor.cs" />
-     <Compile Include="Assets\Scripts\AI_Scripts\FailSimulation.cs" />
      <Compile Include="Assets\Scripts\JsonHelper.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\CubePlacer.cs" />
      <Compile Include="Assets\Scripts\InformationApi.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
-     <Compile Include="Assets\Scripts\AI_Scripts\Tets.cs" />
-     <Compile Include="Assets\Scripts\AI_Scripts\SlowAreaHandler.cs" />
+     <Compile Include="Assets\Scripts\AI_Scripts\SlowArea.cs" />
+     <Compile Include="Assets\Scripts\Fail.cs" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Imports\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
