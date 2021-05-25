@@ -6,7 +6,7 @@ using UnityEngine.AI;
 // Bake le NavMesh automatiquement
 public class NavMeshBaker : MonoBehaviour
 {
-    [SerializeField] NavMeshSurface[] navMeshSurfaces;
+    public NavMeshSurface[] navMeshSurfaces;
 
     private bool navBuilded = false;
 

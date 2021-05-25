@@ -29,6 +29,11 @@ public class NPCMove : MonoBehaviour
         return startTime;
     }
 
+    public NavMeshAgent getAgent()
+    { 
+        return agent;
+    }
+
     void Awake()
     {
         // Set la vitesse de l'Agent
